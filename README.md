@@ -6,11 +6,11 @@ Windows
 .venv\Scripts\activate
 
 macOS / Linux
-source venv/bin/activate
+source .venv/bin/activate
 가상환경이 활성화되면 터미널 앞에 (venv)가 표시됩니다.
 
 3. 필수 패키지 설치
-pip install -r requirement.txt
+pip install -r requirements.txt
 
 4. docker DB서버 생성
 docker run --name coufit-mysql -e MYSQL_ROOT_PASSWORD=1234 -e MYSQL_DATABASE=coufit_project -p 3306:3306 -d mysql:8.4.5
