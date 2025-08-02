@@ -11,8 +11,8 @@ def recommend_stores(user_id, user_lat, user_lon, k=10):
     # 1) 사용자 카테고리별 소비 비율
     sql_cat = text("""
         SELECT s.category_code, SUM(p.amount) as total_amount
-        FROM PaymentHistory p
-        JOIN Store s ON p.store_id = s.id
+        FROM payment_history p
+        JOIN store s ON p.store_id = s.id
         WHERE p.user_id = :user_id
         GROUP BY s.category_code
     """)
@@ -29,7 +29,7 @@ def recommend_stores(user_id, user_lat, user_lon, k=10):
         SELECT 
             SUM(amount) as total_sales,
             AVG(amount) as avg_amount
-        FROM PaymentHistory
+        FROM payment_history
         WHERE user_id = :user_id
     """)
     user_extra_df = pd.read_sql(sql_user_extra, con=engine, params={"user_id": user_id})

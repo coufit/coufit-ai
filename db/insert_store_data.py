@@ -11,18 +11,18 @@ conn = pymysql.connect(
 )
 cursor = conn.cursor()
 
-# 1) RegionCategory 필요한 데이터 먼저 넣기
+# 1) region_category 필요한 데이터 먼저 넣기
 cursor.execute("""
-INSERT INTO RegionCategory (id, parent_id, name) VALUES
+INSERT INTO region_category (id, parent_id, name) VALUES
 (1, NULL, '경기도'),
 (2, 1, '시흥시')
 ON DUPLICATE KEY UPDATE name = VALUES(name)
 """)
 
-# 2) Store 테이블에 CSV 데이터 적재
+# 2) store 테이블에 CSV 데이터 적재
 sql = """
 LOAD DATA LOCAL INFILE 'data/preprocessed/store_preprocessed.csv'
-INTO TABLE Store
+INTO TABLE store
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
@@ -35,4 +35,4 @@ conn.commit()
 
 cursor.close()
 conn.close()
-print('RegionCategory 데이터 삽입 및 Store LOAD DATA 적재 완료!')
+print('region_category 데이터 삽입 및 store LOAD DATA 적재 완료!')

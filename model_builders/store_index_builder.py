@@ -17,14 +17,14 @@ def build_store_index():
             IFNULL(p.total_sales, 0) AS total_sales,
             IFNULL(p.avg_amount, 0) AS avg_amount,
             IFNULL(p.user_count, 0) AS user_count
-        FROM Store s
+        FROM store s
         LEFT JOIN (
             SELECT 
                 store_id,
                 SUM(amount) AS total_sales,
                 AVG(amount) AS avg_amount,
                 COUNT(DISTINCT user_id) AS user_count
-            FROM PaymentHistory
+            FROM payment_history
             GROUP BY store_id
         ) p ON s.id = p.store_id
         WHERE s.latitude IS NOT NULL AND s.longitude IS NOT NULL

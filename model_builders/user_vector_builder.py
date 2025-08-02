@@ -10,8 +10,8 @@ def build_user_vectors():
     # 1) User별 카테고리 소비 합계 (카테고리별 소비 비율 계산을 위한 집계)
     sql = """
     SELECT p.user_id, s.category_code, SUM(p.amount) as total_amount
-    FROM PaymentHistory p
-    JOIN Store s ON p.store_id = s.id
+    FROM payment_history p
+    JOIN store s ON p.store_id = s.id
     GROUP BY p.user_id, s.category_code
     """
     payment_user_cat = pd.read_sql(sql, con=engine)
