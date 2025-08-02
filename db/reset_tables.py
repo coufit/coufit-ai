@@ -3,11 +3,12 @@ import pymysql
 # DB 연결 정보 입력
 conn = pymysql.connect(
     host='localhost',
-    user='coufit',
-    password='coufit_98',
+    user='root',
+    password='1234',
     db='coufit',
     charset='utf8',
-    autocommit=True
+    autocommit=True,
+    local_infile=1
 )
 cursor = conn.cursor()
 
@@ -61,7 +62,7 @@ sql_list = [
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
         name VARCHAR(50),
         store_number VARCHAR(30),
-        category_code BIGINT,
+        category_code ENUM('A01', 'B02', 'C03', 'D04', 'E05', 'F06'),
         category_name VARCHAR(50),
         address VARCHAR(200),
         latitude DOUBLE,

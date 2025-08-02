@@ -13,6 +13,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 4. docker DB서버 생성
+docker run --name coufit-mysql -e MYSQL_ROOT_PASSWORD=1234 -e MYSQL_DATABASE=coufit -p 3306:3306 -d mysql:8.4.5
 docker run --name coufit-mysql -e MYSQL_ROOT_PASSWORD=1234 -e MYSQL_DATABASE=coufit -e MYSQL_USER=coufit -e MYSQL_PASSWORD=coufit_98 -p 3306:3306 -d mysql:8.4.5
 
 5. DB 테이블 생성 및 데이터 삽입

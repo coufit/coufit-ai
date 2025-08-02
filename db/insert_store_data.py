@@ -2,8 +2,8 @@ import pymysql
 
 conn = pymysql.connect(
     host='localhost',
-    user='coufit',
-    password='coufit_98',
+    user='root',
+    password='1234',
     db='coufit',
     charset='utf8',
     autocommit=True,
