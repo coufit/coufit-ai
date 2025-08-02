@@ -3,9 +3,9 @@ import pymysql
 # MySQL 연결 정보 입력
 conn = pymysql.connect(
     host='localhost',
-    user='root',
-    password='1234',
-    db='coufit_project',
+    user='coufit',
+    password='coufit_98',
+    db='coufit',
     charset='utf8',
     autocommit=True
 )

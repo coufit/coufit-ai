@@ -2,9 +2,9 @@ import pymysql
 
 conn = pymysql.connect(
     host='localhost',
-    user='root',
-    password='1234',
-    db='coufit_project',
+    user='coufit',
+    password='coufit_98',
+    db='coufit',
     charset='utf8',
     autocommit=True,
     local_infile=1     # 이 부분 반드시 켜기!
