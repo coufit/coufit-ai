@@ -3,3 +3,6 @@ sqlalchemy==2.0.41
 pymysql==1.1.1
 fastapi==0.115.12
 uvicorn==0.34.3
+scikit-learn==1.6.1
+faiss-cpu==1.11.0.post1
+cryptography==45.0.5
