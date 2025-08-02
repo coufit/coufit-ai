@@ -62,7 +62,7 @@ sql_list = [
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
         name VARCHAR(50),
         store_number VARCHAR(30),
-        category_code ENUM('A01', 'B02', 'C03', 'D04', 'E05', 'F06'),
+        category_code INT,
         category_name VARCHAR(50),
         address VARCHAR(200),
         latitude DOUBLE,
