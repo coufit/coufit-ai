@@ -43,7 +43,8 @@ def recommend_stores(user_id, user_lat, user_lon, k=10):
     scaler_loc = joblib.load("model/store_scaler_loc.pkl")
     scaler_extra = joblib.load("model/store_scaler_extra.pkl")
     index = faiss.read_index("model/store.index")
-    store_id_map = joblib.load("model/store_id_map.pkl")
+    # store_id_map = joblib.load("model/store_id_map.pkl")
+    store_info = joblib.load("model/store_info.pkl")
 
     # 4) 사용자 카테고리 벡터 생성
     categories = encoder.categories_[0]
@@ -68,11 +69,17 @@ def recommend_stores(user_id, user_lat, user_lon, k=10):
     D, I = index.search(user_vector, k)
 
     # 9) 추천 결과 생성
-    recommended_store_ids = [store_id_map[i] for i in I[0]]
-    return recommended_store_ids
-    # results = []
-    # for store_id, dist in zip(recommended_store_ids, D[0]):
-    #     results.append({"store_id": store_id, "distance": float(dist)})
+    results = []
+    for rank, idx in enumerate(I[0]):
+        store_id = store_info[idx]["id"]
+        store_name = store_info[idx]["name"]
+        store_cat = store_info[idx]["category"]
+        results.append({
+            "id": int(store_id),
+            "name": store_name,
+            "category": store_cat,
+            "distance": float(D[0][rank])
+        })
 
-    # return results
+    return results
 
