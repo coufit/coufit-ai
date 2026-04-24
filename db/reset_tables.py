@@ -1,19 +1,16 @@
+import sys
+from pathlib import Path
+
 import pymysql
 
-# DB 연결 정보 입력
-conn = pymysql.connect(
-    host='localhost',
-    user='root',
-    password='1234',
-    db='coufit',
-    charset='utf8',
-    autocommit=True,
-    local_infile=1
-)
+if __package__ in {None, ""}:
+    sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+from db.config import get_pymysql_connection_kwargs
+
+conn = pymysql.connect(**get_pymysql_connection_kwargs())
 cursor = conn.cursor()
 
-# ------------------------
-# 1. 테이블 DROP 순서 (외래키 충돌 방지용)
 drop_list = [
     "point",
     "payment_history",
@@ -22,21 +19,18 @@ drop_list = [
     "store_discount",
     "store",
     "user",
-    "region_category"
+    "region_category",
 ]
 
-for tbl in drop_list:
+for table_name in drop_list:
     try:
-        cursor.execute(f"DROP TABLE IF EXISTS {tbl}")
-    except Exception as e:
-        print(f"테이블 {tbl} 삭제 중 오류: {e}")
+        cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+    except Exception as exc:
+        print(f"Failed to drop table {table_name}: {exc}")
 
-print("모든 테이블 삭제 완료.")
+print("All tables dropped successfully.")
 
-# ------------------------
-# 2. 테이블 CREATE SQL 리스트
 sql_list = [
-    # 지역 카테고리
     """
     CREATE TABLE IF NOT EXISTS region_category (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -44,8 +38,6 @@ sql_list = [
         name VARCHAR(20)
     )
     """,
-
-    # 유저
     """
     CREATE TABLE IF NOT EXISTS user (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -55,8 +47,6 @@ sql_list = [
         created_at DATETIME
     )
     """,
-
-    # 가맹점
     """
     CREATE TABLE IF NOT EXISTS store (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -74,8 +64,6 @@ sql_list = [
         FOREIGN KEY(region_category_id) REFERENCES region_category(id)
     )
     """,
-
-    # 가맹점 이미지
     """
     CREATE TABLE IF NOT EXISTS store_image (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -85,8 +73,6 @@ sql_list = [
         FOREIGN KEY(store_id) REFERENCES store(id)
     )
     """,
-
-    # 가맹점 할인
     """
     CREATE TABLE IF NOT EXISTS store_discount (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -100,8 +86,6 @@ sql_list = [
         FOREIGN KEY(store_id) REFERENCES store(id)
     )
     """,
-
-    # 포인트
     """
     CREATE TABLE IF NOT EXISTS point (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -112,8 +96,6 @@ sql_list = [
         FOREIGN KEY(user_id) REFERENCES user(id)
     )
     """,
-
-    # 소비 내역
     """
     CREATE TABLE IF NOT EXISTS payment_history (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -125,8 +107,6 @@ sql_list = [
         FOREIGN KEY(store_id) REFERENCES store(id)
     )
     """,
-
-    # 충전 내역
     """
     CREATE TABLE IF NOT EXISTS charge_history (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -136,12 +116,13 @@ sql_list = [
         charged_at DATETIME,
         FOREIGN KEY(user_id) REFERENCES user(id)
     )
-    """
+    """,
 ]
 
 for sql in sql_list:
     cursor.execute(sql)
 
-print("모든 테이블 생성이 완료되었습니다.")
+print("All tables recreated successfully.")
+
 cursor.close()
 conn.close()

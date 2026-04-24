@@ -1,21 +1,17 @@
+import sys
+from pathlib import Path
+
 import pymysql
 
-# MySQL 연결 정보 입력
-conn = pymysql.connect(
-    host='localhost',
-    user='root',
-    password='1234',
-    db='coufit',
-    charset='utf8',
-    autocommit=True,
-    local_infile=1
-)
+if __package__ in {None, ""}:
+    sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+from db.config import get_pymysql_connection_kwargs
+
+conn = pymysql.connect(**get_pymysql_connection_kwargs())
 cursor = conn.cursor()
 
-# 스네이크 케이스로 변경된 테이블 및 컬럼명
 sql_list = [
-
-    # 지역 카테고리
     """
     CREATE TABLE IF NOT EXISTS region_category (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -23,8 +19,6 @@ sql_list = [
         name VARCHAR(20)
     )
     """,
-
-    # 가맹점
     """
     CREATE TABLE IF NOT EXISTS store (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -42,8 +36,6 @@ sql_list = [
         FOREIGN KEY(region_category_id) REFERENCES region_category(id)
     )
     """,
-
-    # 가맹점 이미지
     """
     CREATE TABLE IF NOT EXISTS store_image (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -53,8 +45,6 @@ sql_list = [
         FOREIGN KEY(store_id) REFERENCES store(id)
     )
     """,
-
-    # 가맹점 할인
     """
     CREATE TABLE IF NOT EXISTS store_discount (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -68,8 +58,6 @@ sql_list = [
         FOREIGN KEY(store_id) REFERENCES store(id)
     )
     """,
-
-    # 유저
     """
     CREATE TABLE IF NOT EXISTS user (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -79,8 +67,6 @@ sql_list = [
         created_at DATETIME
     )
     """,
-
-    # 포인트
     """
     CREATE TABLE IF NOT EXISTS point (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -91,8 +77,6 @@ sql_list = [
         FOREIGN KEY(user_id) REFERENCES user(id)
     )
     """,
-
-    # 소비내역
     """
     CREATE TABLE IF NOT EXISTS payment_history (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -104,8 +88,6 @@ sql_list = [
         FOREIGN KEY(store_id) REFERENCES store(id)
     )
     """,
-
-    # 충전내역
     """
     CREATE TABLE IF NOT EXISTS charge_history (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -115,14 +97,13 @@ sql_list = [
         charged_at DATETIME,
         FOREIGN KEY(user_id) REFERENCES user(id)
     )
-    """
+    """,
 ]
 
-# 순서대로 테이블 생성 실행
 for sql in sql_list:
     cursor.execute(sql)
 
 cursor.close()
 conn.close()
 
-print("모든 테이블 생성이 완료되었습니다.")
+print("All tables created successfully.")
