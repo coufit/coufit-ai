@@ -2,18 +2,19 @@
 __pycache__/
 *.py[cod]
 
-# 가상환경
+# Virtual environments
 .venv/
 env/
 venv/
 
-# data
-data/
+# Local environment files
+.env
 
-# model
+# Generated data
+data/
 model/
 
-# 기타
+# Misc
 .DS_Store
 .idea/
 *.log
